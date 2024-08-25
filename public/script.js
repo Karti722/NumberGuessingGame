@@ -32,6 +32,9 @@ function submitGuess() {
       if (!data.gameWon) {
         guessInput.value = '';
       }
+      else {
+        resetButton.textContent = 'Play again';
+      }
       guessInput.focus();
     });
 }
@@ -44,6 +47,7 @@ function resetGame() {
       feedback.textContent = '';
       previousGuesses.textContent = '';
       guessInput.value = '';
+      resetButton.textContent = 'Reset Game';
       guessInput.focus();
     });
 }
