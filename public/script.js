@@ -9,7 +9,6 @@ const mostAttempts = document.getElementById('mostattempts');
 const resetAttemptsButton = document.getElementById('resetAttemptsButton');
 const backgroundMusic = document.getElementById('music');
 const giveUpSound = document.getElementById('giveup');
-const deleteRecordSound = document.getElementById('deleterecord');
 const resetSound = document.getElementById('reset');
 
 // Fetch the initial game state
@@ -43,7 +42,7 @@ function submitGuess() {
         guessInput.value = '';
       }
       else {
-        resetButton.textContent = 'Play again';
+        resetButton.textContent = '🙏Play Again?';
         leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
         mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
         backgroundMusic.pause();
@@ -57,13 +56,16 @@ function submitGuess() {
 
 // Handle the game reset
 function resetGame() {
-  backgroundMusic.play();
   fetch('/api/reset', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
       feedback.textContent = '';
       previousGuesses.textContent = '';
       guessInput.value = '';
+      if (resetButton.textContent === '🙏Play Again?') {
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+      }
       resetButton.textContent = '🌅Reset Game';
       guessInput.focus();
     });

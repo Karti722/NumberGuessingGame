@@ -141,7 +141,7 @@ app.post('/api/guess', async (req, res) => {
 // Endpoint to reset the game
 app.post('/api/reset', (req, res) => {
   initGame();
-  res.json({ message: 'Game has been reset.' });
+  res.json({ message: 'Game has been reset.', gameWon });
 });
 
 // Endpoint to give up and reveal the number
