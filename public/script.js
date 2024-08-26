@@ -4,6 +4,8 @@ const resetButton = document.getElementById('resetButton');
 const feedback = document.getElementById('feedback');
 const previousGuesses = document.getElementById('previousGuesses');
 const giveupButton = document.getElementById('giveupButton');
+const leastAttempts = document.getElementById('leastattempts');
+const mostAttempts = document.getElementById('mostattempts');
 
 // Fetch the initial game state
 function fetchGameState() {
@@ -34,6 +36,8 @@ function submitGuess() {
       }
       else {
         resetButton.textContent = 'Play again';
+        leastAttempts.textContent = `Least attempts: ${data.leastAttempts}`;
+        mostAttempts.textContent = `Most attempts: ${data.mostAttempts}`;
       }
       guessInput.focus();
     });
