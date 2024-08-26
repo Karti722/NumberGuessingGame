@@ -30,18 +30,35 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json()); // To parse JSON bodies
 
 // Endpoint to get the game state
-app.get('/api/game', (req, res) => {
-  res.json({
-    guessCount,
-    guesses,
-  });
+app.get('/api/game', async (req, res) => {
+  try {
+    // Fetch the current record of least and most attempts
+    let scoreRecord = await RecordedScores.findOne();
+    let leastAttempts = "No record yet";
+    let mostAttempts = "No record yet";
+
+    if (scoreRecord) {
+      leastAttempts = scoreRecord.leastAttempts === 999 ? "No record yet" : scoreRecord.leastAttempts;
+      mostAttempts = scoreRecord.mostAttempts === 0 ? "No record yet" : scoreRecord.mostAttempts;
+    }
+
+    res.json({
+      guessCount,
+      guesses,
+      leastAttempts,
+      mostAttempts,
+    });
+  } catch (err) {
+    console.error("Error fetching game state:", err);
+    res.status(500).json({ message: "An error occurred while fetching the game state." });
+  }
 });
 
 // Endpoint to process a guess
 app.post('/api/guess', async (req, res) => {
   let feedbackMessage;
 
-  // Won't let user guess if game is already over
+  // Won't let user guess if the game is already over
   if (gameWon || giveUp) {
     feedbackMessage = 'Game is already over. Please reset the game to play again.';
     res.json({ feedbackMessage });
@@ -63,7 +80,7 @@ app.post('/api/guess', async (req, res) => {
     if (!scoreRecord) {
       scoreRecord = new RecordedScores(); // Initializes with default values
     }
-    
+
     // Process the guess
     if (guess === targetNumber) {
       feedbackMessage = `Correct! You guessed the number in ${guessCount} attempt(s). Press the play again button to start another game.`;
@@ -129,6 +146,29 @@ app.post('/api/giveup', (req, res) => {
   let feedbackMessage = `The number was ${targetNumber}. Press the Reset Game button to play again.`;
   giveUp = true;
   res.json({ feedbackMessage });
+});
+
+
+// Endpoint to reset the least and most attempts
+app.post('/api/reset-attempts', async (req, res) => {
+  try {
+    let scoreRecord = await RecordedScores.findOne();
+
+    if (!scoreRecord) {
+      // If no record exists, create a new one
+      scoreRecord = new RecordedScores();
+    } else {
+      // Reset the values to their defaults
+      scoreRecord.leastAttempts = 999;
+      scoreRecord.mostAttempts = 0;
+    }
+
+    await scoreRecord.save();
+    res.json({ message: 'Attempts records have been reset.' });
+  } catch (err) {
+    console.error("Error resetting attempts records:", err);
+    res.status(500).json({ message: 'An error occurred while resetting attempts records.' });
+  }
 });
 
 // Start the server

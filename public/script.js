@@ -6,6 +6,7 @@ const previousGuesses = document.getElementById('previousGuesses');
 const giveupButton = document.getElementById('giveupButton');
 const leastAttempts = document.getElementById('leastattempts');
 const mostAttempts = document.getElementById('mostattempts');
+const resetAttemptsButton = document.getElementById('resetAttemptsButton');
 
 // Fetch the initial game state
 function fetchGameState() {
@@ -13,6 +14,8 @@ function fetchGameState() {
     .then(response => response.json())
     .then(data => {
       previousGuesses.textContent = `Previous guesses: ${data.guesses.join(', ')}`;
+      leastAttempts.textContent = `Least attempts: ${data.leastAttempts}`;
+      mostAttempts.textContent = `Most attempts: ${data.mostAttempts}`;
     });
 }
 
@@ -56,6 +59,21 @@ function resetGame() {
     });
 }
 
+// Function to reset the least and most attempts
+function resetAttempts() {
+  fetch('/api/reset-attempts', { method: 'POST' })
+    .then(response => response.json())
+    .then(data => {
+      leastAttempts.textContent = 'Least attempts: No record yet';
+      mostAttempts.textContent = 'Most attempts: No record yet';
+      console.log(data.message);
+    })
+    .catch(err => {
+      console.error('Error resetting attempts:', err);
+      feedback.textContent = 'An error occurred while resetting attempts.';
+    });
+}
+
 // Event listeners
 guessButton.addEventListener('click', submitGuess);
 resetButton.addEventListener('click', resetGame);
@@ -74,6 +92,7 @@ giveupButton.addEventListener('click', () => {
       guessInput.focus();
     });
 });
+resetAttemptsButton.addEventListener('click', resetAttempts);
 
 // Initialize the game state on load
 window.onload = fetchGameState;
