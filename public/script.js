@@ -46,20 +46,25 @@ function submitGuess() {
         resetButton.textContent = 'Play again';
         leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
         mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
       }
+      document.getElementById(data.soundID).play();
+      document.getElementById(data.soundID).currentTime = 0;
       guessInput.focus();
     });
 }
 
 // Handle the game reset
 function resetGame() {
+  backgroundMusic.play();
   fetch('/api/reset', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
       feedback.textContent = '';
       previousGuesses.textContent = '';
       guessInput.value = '';
-      resetButton.textContent = 'Reset Game';
+      resetButton.textContent = '🌅Reset Game';
       guessInput.focus();
     });
     resetSound.play();
@@ -68,19 +73,20 @@ function resetGame() {
 
 // Function to reset the least and most attempts
 function resetAttempts() {
+  // deleteToggleSound = 
   fetch('/api/reset-attempts', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
       leastAttempts.textContent = '😍Least attempts: No record yet';
       mostAttempts.textContent = '😖Most attempts: No record yet';
       console.log(data.message);
+      document.getElementById(data.soundID).play();
+      document.getElementById(data.soundID).currentTime = 0;
     })
     .catch(err => {
       console.error('Error resetting attempts:', err);
       feedback.textContent = 'An error occurred while resetting attempts.';
     });
-    deleteRecordSound.play();
-    deleteRecordSound.currentTime = 0;
 }
 
 // Event listeners

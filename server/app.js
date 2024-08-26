@@ -57,11 +57,12 @@ app.get('/api/game', async (req, res) => {
 // Endpoint to process a guess
 app.post('/api/guess', async (req, res) => {
   let feedbackMessage;
+  let soundID = "guessinvalid";
 
   // Won't let user guess if the game is already over
   if (gameWon || giveUp) {
     feedbackMessage = 'Game is already over. Please reset the game to play again.';
-    res.json({ feedbackMessage });
+    res.json({ feedbackMessage, soundID });
     return;
   }
 
@@ -70,7 +71,7 @@ app.post('/api/guess', async (req, res) => {
   // Validate the guess
   if (guess == null || guess < -1000000 || guess > 1000000) {
     feedbackMessage = 'Please enter a valid number between -1000000 and 1000000.';
-    res.json({ feedbackMessage, guessCount, guesses });
+    res.json({ feedbackMessage, guessCount, guesses, soundID });
     return;
   }
 
@@ -85,6 +86,7 @@ app.post('/api/guess', async (req, res) => {
     if (guess === targetNumber) {
       feedbackMessage = `Correct! You guessed the number in ${guessCount} attempt(s). Press the play again button to start another game.`;
       gameWon = true;
+      soundID = "guessexact";  
 
       // Update the score record if the new score is better
       if (guessCount < scoreRecord.leastAttempts) {
@@ -96,10 +98,14 @@ app.post('/api/guess', async (req, res) => {
 
       await scoreRecord.save(); // Save the record to the database
       console.log("Score record updated:", scoreRecord);
-    } else if (guess > targetNumber) {
+    } 
+    else if (guess > targetNumber) {
       feedbackMessage = 'Number is less than your guess';
-    } else if (guess < targetNumber) {
+      soundID = "guessover";
+    } 
+    else if (guess < targetNumber) {
       feedbackMessage = 'Number is greater than your guess';
+      soundID = "guessunder";
     }
 
     // Prepare least and most attempts for the response
@@ -123,6 +129,7 @@ app.post('/api/guess', async (req, res) => {
       gameWon,
       leastAttempts,
       mostAttempts,
+      soundID,
     });
 
   } catch (err) {
@@ -151,6 +158,7 @@ app.post('/api/giveup', (req, res) => {
 
 // Endpoint to reset the least and most attempts
 app.post('/api/reset-attempts', async (req, res) => {
+  soundID = "deleterecord";
   try {
     let scoreRecord = await RecordedScores.findOne();
 
@@ -159,12 +167,15 @@ app.post('/api/reset-attempts', async (req, res) => {
       scoreRecord = new RecordedScores();
     } else {
       // Reset the values to their defaults
+      if (scoreRecord.leastAttempts === 999 && scoreRecord.mostAttempts === 0) {
+        soundID = "recordalreadydeleted";
+      }
       scoreRecord.leastAttempts = 999;
       scoreRecord.mostAttempts = 0;
     }
 
     await scoreRecord.save();
-    res.json({ message: 'Attempts records have been reset.' });
+    res.json({ message: 'Attempts records have been reset.', soundID });
   } catch (err) {
     console.error("Error resetting attempts records:", err);
     res.status(500).json({ message: 'An error occurred while resetting attempts records.' });
