@@ -14,8 +14,8 @@ function fetchGameState() {
     .then(response => response.json())
     .then(data => {
       previousGuesses.textContent = `Previous guesses: ${data.guesses.join(', ')}`;
-      leastAttempts.textContent = `Least attempts: ${data.leastAttempts}`;
-      mostAttempts.textContent = `Most attempts: ${data.mostAttempts}`;
+      leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
+      mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
     });
 }
 
@@ -39,8 +39,8 @@ function submitGuess() {
       }
       else {
         resetButton.textContent = 'Play again';
-        leastAttempts.textContent = `Least attempts: ${data.leastAttempts}`;
-        mostAttempts.textContent = `Most attempts: ${data.mostAttempts}`;
+        leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
+        mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
       }
       guessInput.focus();
     });
@@ -64,8 +64,8 @@ function resetAttempts() {
   fetch('/api/reset-attempts', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
-      leastAttempts.textContent = 'Least attempts: No record yet';
-      mostAttempts.textContent = 'Most attempts: No record yet';
+      leastAttempts.textContent = '😍Least attempts: No record yet';
+      mostAttempts.textContent = '😖Most attempts: No record yet';
       console.log(data.message);
     })
     .catch(err => {
