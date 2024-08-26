@@ -7,17 +7,39 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🅰️Random Number is in between -1 MILLION and 1 MILLION ⚠️</h1>
-    <p>Guess That Number in the LEAST Amount of Attempts Possible 😈</p>
+    <!-- Background music -->
+    <audio autoplay loop id="music">
+      <source src="audio/background-music.mp3">
+      Your browser does not support the audio element.
+  </audio>
 
-    
+    <!-- User giving up Sound Effect-->
+    <audio id="giveup">
+      <source src="audio/give-up.mp3">
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- User deleting their recorded attempt scores -->
+    <audio id="deleterecord">
+      <source src="audio/delete-record.mp3">
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- User resetting their game -->
+    <audio id="reset">
+      <source src="audio/reset-game.mp3">
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- Game Container -->
+  <div class="container">
+    <h1>🅰️Random Number is in between -1 MILLION and 1 MILLION⚠️</h1>
+    <p>Guess That Number in the LEAST Amount of Attempts Possible 😈</p>
       <input type="number" id="guessInput" placeholder="Enter your guess">
       <button id="guessButton">📝Guess</button>
       <button id="resetButton">🌅Reset Game</button>
       <button id="giveupButton">💔Give Up?</button> 
       <button id="resetAttemptsButton">🗑️Delete Least and Most Attempts Scores</button>
-
       <div id="feedback"></div>
       <div id="previousGuesses"></div>
       <h5 id="leastattempts">😍Lowest Attempts Recorded: </h5>

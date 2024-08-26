@@ -1,20 +1,34 @@
 body {
     font-family: Arial, sans-serif;
-    box-shadow: 100px 100px 100px 100px rgba(218, 218, 215, 0.2);
-    background: linear-gradient(to right, #1e0600, #feb47b);
+    background: linear-gradient(67deg, #0040ffa2, hwb(298 3% 38%));
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    animation: gradientAnimation 30s ease infinite;
+    background-size: 5000% 99%;
   }
+  
+  @keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
   
   .container {
     background-color: #ffffffff;
     padding: 40px;
     padding-bottom: 10px;
     border-radius: 102px;
-    box-shadow: 12px 12px 12px 12px rgba(119, 106, 122, 0.942);
+    box-shadow: 312px 200px 122px 72px rgba(255, 255, 255, 0.499);
     text-align: center;
     width: 850px;
     height: 450px;
@@ -27,6 +41,7 @@ body {
     margin-top: 10px;
     padding-top: 20px;
     justify-content: inherit;
+    box-shadow: 312px 200px 122px 22px rgba(255, 255, 255, 0.292);
   }
 
   h1 {
@@ -36,6 +51,7 @@ body {
   
   .game-container {
     margin-top: 20px;
+    box-shadow: 312px 200px 122px 22px rgba(255, 255, 255, 0.292);
   }
   
   #guessInput {
