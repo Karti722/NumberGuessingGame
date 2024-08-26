@@ -140,12 +140,19 @@ app.post('/api/guess', async (req, res) => {
 
 // Endpoint to reset the game
 app.post('/api/reset', (req, res) => {
+  if (gameWon || giveUp) {
+    soundID = "playagain";
+  }
+  else {
+    soundID = "reset";
+  }
   initGame();
-  res.json({ message: 'Game has been reset.', gameWon });
+  res.json({ message: 'Game has been reset.', soundID });
 });
 
 // Endpoint to give up and reveal the number
 app.post('/api/giveup', (req, res) => {
+  gameWon = false;
   if (giveUp || gameWon) {
     res.json({ feedbackMessage: 'Game is already over. Press the Play again or Reset Game button to play again.' });
     return;
