@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const RecordedScores = require('./models/ScoreModel.js');
+require('dotenv').config(); // Must read the .env file before connecting to the database
 
 // Game logic variables
 let targetNumber;
@@ -11,6 +12,8 @@ let guessCount;
 let guesses;
 let gameWon = false;
 let giveUp = false;
+const CONNECTIONSTRING = process.env.MONGODB_URI;
+console.log(CONNECTIONSTRING);
 
 // Initialize a new game
 function initGame() {
@@ -195,9 +198,8 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Connect to the database
-let connection_string = "mongodb+srv://kartikeyaku:tbLc6ziCnrzpUdSZ@cluster0.vada2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-mongoose.connect(connection_string)
+// Connect to the database using the connection string from the .env file's URI
+mongoose.connect(CONNECTIONSTRING)
   .then(() => {
     console.log("Connected to the database");
   })
