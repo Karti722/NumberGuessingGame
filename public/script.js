@@ -9,7 +9,10 @@ const mostAttempts = document.getElementById('mostattempts');
 const resetAttemptsButton = document.getElementById('resetAttemptsButton');
 const backgroundMusic = document.getElementById('music');
 const giveUpSound = document.getElementById('giveup');
-var resetSound = document.getElementById('reset');
+var resetSound = document.getElementById('playagain');
+
+// Hide the reset button initially. Only show it when the game is over
+resetButton.style.display = "none";
 
 // Fetch the initial game state
 function fetchGameState() {
@@ -42,6 +45,9 @@ function submitGuess() {
         guessInput.value = '';
       }
       else {
+        giveupButton.style.display = "none";
+        guessButton.style.display = "none";
+        resetButton.style.display = "inline-block";
         resetButton.textContent = '🙏Play Again?';
         leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
         mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
@@ -59,17 +65,16 @@ function resetGame() {
   fetch('/api/reset', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
-      resetSound = document.getElementById(data.soundID);
+      resetButton.style.display = "none";
+      giveupButton.style.display = "inline-block";
+      guessButton.style.display = "inline-block";
       resetSound.play();
       resetSound.currentTime = 0;
       feedback.textContent = '';
       previousGuesses.textContent = '';
       guessInput.value = '';
-      if (resetButton.textContent === '🙏Play Again?') {
-        backgroundMusic.currentTime = 0;
-        backgroundMusic.play();
-      }
-      resetButton.textContent = '🌅Reset Game';
+      backgroundMusic.currentTime = 0;
+      backgroundMusic.play();
       guessInput.focus();
     });
 }
@@ -104,6 +109,7 @@ giveupButton.addEventListener('click', () => {
   fetch('/api/giveup', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
+      resetButton.style.display = "inline-block";
       feedback.textContent = data.feedbackMessage;
       previousGuesses.textContent = '';
       guessInput.value = '';
@@ -116,6 +122,10 @@ giveupButton.addEventListener('click', () => {
     giveUpSound.currentTime = 0;
 });
 resetAttemptsButton.addEventListener('click', resetAttempts);
+giveupButton.addEventListener('click', () => {
+  giveupButton.style.display = "none";
+  guessButton.style.display = "none";
+});
 
 // Initialize the game state on load
 window.onload = fetchGameState;

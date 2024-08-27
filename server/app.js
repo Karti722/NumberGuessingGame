@@ -34,6 +34,7 @@ app.use(express.json()); // To parse JSON bodies
 
 // Endpoint to get the game state
 app.get('/api/game', async (req, res) => {
+  initGame(); // Start a new game if the user refreshes the page
   try {
     // Fetch the current record of least and most attempts
     let scoreRecord = await RecordedScores.findOne();
@@ -50,6 +51,8 @@ app.get('/api/game', async (req, res) => {
       guesses,
       leastAttempts,
       mostAttempts,
+      giveUp,
+      gameWon,
     });
   } catch (err) {
     console.error("Error fetching game state:", err);
@@ -143,14 +146,8 @@ app.post('/api/guess', async (req, res) => {
 
 // Endpoint to reset the game
 app.post('/api/reset', (req, res) => {
-  if (gameWon || giveUp) {
-    soundID = "playagain";
-  }
-  else {
-    soundID = "reset";
-  }
   initGame();
-  res.json({ message: 'Game has been reset.', soundID });
+  res.json({ message: 'Game has been reset.'});
 });
 
 // Endpoint to give up and reveal the number
