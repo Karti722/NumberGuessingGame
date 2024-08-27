@@ -8,6 +8,7 @@ I used HTML, CSS, and JavaScript for parsing in the values (as a request body) t
 npm install express
 npm install mongodb
 npm install mongoose
+npm install dotenv
 node server/app.js
 
 # Credits
