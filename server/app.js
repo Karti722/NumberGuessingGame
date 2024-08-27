@@ -11,13 +11,11 @@ let targetNumber;
 let guessCount;
 let guesses;
 let gameWon = false;
-let giveUp = false;
 const CONNECTIONSTRING = process.env.MONGODB_URI;
-console.log(CONNECTIONSTRING);
+
 
 // Initialize a new game
 function initGame() {
-  giveUp = false;
   gameWon = false;
   targetNumber = Math.floor(Math.random() * 2000001) - 1000000;
   guessCount = 1;
@@ -51,7 +49,6 @@ app.get('/api/game', async (req, res) => {
       guesses,
       leastAttempts,
       mostAttempts,
-      giveUp,
       gameWon,
     });
   } catch (err) {
@@ -65,18 +62,11 @@ app.post('/api/guess', async (req, res) => {
   let feedbackMessage;
   let soundID = "guessinvalid";
 
-  // Won't let user guess if the game is already over
-  if (gameWon || giveUp) {
-    feedbackMessage = 'Game is already over. Please reset the game to play again.';
-    res.json({ feedbackMessage, soundID });
-    return;
-  }
-
   const { guess } = req.body;
 
   // Validate the guess
   if (guess == null || guess < -1000000 || guess > 1000000) {
-    feedbackMessage = 'Please enter a valid number between -1000000 and 1000000.';
+    feedbackMessage = 'Please enter a valid number between -1000000 and 1000000 😡';
     res.json({ feedbackMessage, guessCount, guesses, soundID });
     return;
   }
@@ -153,12 +143,7 @@ app.post('/api/reset', (req, res) => {
 // Endpoint to give up and reveal the number
 app.post('/api/giveup', (req, res) => {
   gameWon = false;
-  if (giveUp || gameWon) {
-    res.json({ feedbackMessage: 'Game is already over. Press the Play again or Reset Game button to play again.' });
-    return;
-  }
-  let feedbackMessage = `The number was ${targetNumber}. Press the Reset Game button to play again.`;
-  giveUp = true;
+  let feedbackMessage = `The number was ${targetNumber}. Press Play Again to start a new round 💝.`;
   res.json({ feedbackMessage });
 });
 
