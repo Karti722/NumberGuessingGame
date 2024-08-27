@@ -22,6 +22,9 @@ function fetchGameState() {
       previousGuesses.textContent = `Previous guesses: ${data.guesses.join(', ')}`;
       leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
       mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
+      if (data.leastAttempts != "No record yet" || data.mostAttempts != "No record yet") {
+        resetAttemptsButton.style.display = "inline-block";
+      }
     });
 }
 
@@ -51,6 +54,9 @@ function submitGuess() {
         resetButton.textContent = '🙏Play Again?';
         leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
         mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
+        if (data.leastAttempts != "No record yet" || data.mostAttempts != "No record yet") {
+          resetAttemptsButton.style.display = "inline-block";
+        }
         backgroundMusic.pause();
         backgroundMusic.currentTime = 0;
       }
@@ -90,6 +96,7 @@ function resetAttempts() {
       console.log(data.message);
       document.getElementById(data.soundID).play();
       document.getElementById(data.soundID).currentTime = 0;
+      resetAttemptsButton.style.display = "none";
     })
     .catch(err => {
       console.error('Error resetting attempts:', err);
