@@ -174,11 +174,8 @@ app.post('/api/reset-attempts', async (req, res) => {
   }
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app; // Export app for Vercel to use
+
 
 // Connect to the database using the connection string from the .env file's URI
 mongoose.connect(CONNECTIONSTRING)
