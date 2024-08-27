@@ -9,6 +9,7 @@ const mostAttempts = document.getElementById('mostattempts');
 const resetAttemptsButton = document.getElementById('resetAttemptsButton');
 const backgroundMusic = document.getElementById('music');
 const giveUpSound = document.getElementById('giveup');
+const deleterecordSound = document.getElementById('deleterecord');
 var resetSound = document.getElementById('playagain');
 
 // Hide the reset button initially. Only show it when the game is over
@@ -94,8 +95,8 @@ function resetAttempts() {
       leastAttempts.textContent = '😍Least attempts: No record yet';
       mostAttempts.textContent = '😖Most attempts: No record yet';
       console.log(data.message);
-      document.getElementById(data.soundID).play();
-      document.getElementById(data.soundID).currentTime = 0;
+      deleterecordSound.play();
+      deleterecordSound.currentTime = 0;
       resetAttemptsButton.style.display = "none";
     })
     .catch(err => {

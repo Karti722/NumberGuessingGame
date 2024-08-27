@@ -150,7 +150,6 @@ app.post('/api/giveup', (req, res) => {
 
 // Endpoint to reset the least and most attempts
 app.post('/api/reset-attempts', async (req, res) => {
-  soundID = "deleterecord";
   try {
     let scoreRecord = await RecordedScores.findOne();
 
@@ -159,15 +158,12 @@ app.post('/api/reset-attempts', async (req, res) => {
       scoreRecord = new RecordedScores();
     } else {
       // Reset the values to their defaults
-      if (scoreRecord.leastAttempts === 999 && scoreRecord.mostAttempts === 0) {
-        soundID = "recordalreadydeleted";
-      }
       scoreRecord.leastAttempts = 999;
       scoreRecord.mostAttempts = 0;
     }
 
     await scoreRecord.save();
-    res.json({ message: 'Attempts records have been reset.', soundID });
+    res.json({ message: 'Attempts records have been reset.'});
   } catch (err) {
     console.error("Error resetting attempts records:", err);
     res.status(500).json({ message: 'An error occurred while resetting attempts records.' });
@@ -176,6 +172,9 @@ app.post('/api/reset-attempts', async (req, res) => {
 
 module.exports = app; // Export app for Vercel to use
 
+app.listen(process.env.PORT || 3000, () => {  // Start the server
+  console.log('Server is running on port 3000');
+});
 
 // Connect to the database using the connection string from the .env file's URI
 mongoose.connect(CONNECTIONSTRING)
