@@ -13,14 +13,13 @@ const deleterecordSound = document.getElementById('deleterecord');
 var resetSound = document.getElementById('playagain');
 
 // Hide the reset button initially. Only show it when the game is over
-resetButton.style.display = "none";
+;
 
 // Fetch the initial game state
 function fetchGameState() {
   fetch('/api/game')
     .then(response => response.json())
     .then(data => {
-      previousGuesses.textContent = `Previous guesses: ${data.guesses.join(', ')}`;
       leastAttempts.textContent = `😍Least attempts: ${data.leastAttempts}`;
       mostAttempts.textContent = `😖Most attempts: ${data.mostAttempts}`;
       if (data.leastAttempts != "No record yet" || data.mostAttempts != "No record yet") {
@@ -72,6 +71,8 @@ function resetGame() {
   fetch('/api/reset', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
+      guessInput.style.display = "inline-block";
+      giveupButton.style.display = "inline-block";
       resetButton.style.display = "none";
       giveupButton.style.display = "inline-block";
       guessButton.style.display = "inline-block";
