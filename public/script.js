@@ -124,6 +124,7 @@ giveupButton.addEventListener('click', () => {
       guessInput.value = '';
       guessInput.focus();
       resetButton.textContent = '🙏Play Again?'
+      guessInput.style.display = "none";
     });
     backgroundMusic.pause();
     backgroundMusic.currentTime = 0;
